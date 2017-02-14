@@ -54,7 +54,7 @@ public class AndroidRetrofit extends AndroidOSConnect {
         });
     }
 
-    public void delete(final String id) {
+    public void delete(final String id,final AndroidDeleteListener listener) {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(REQUEST_DOMAIN)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -66,11 +66,13 @@ public class AndroidRetrofit extends AndroidOSConnect {
 
             @Override
             public void success(Response response, Response response2) {
+                listener.onSuccess();
                 Log.e("RetrofitResult", "Delete Success");
             }
 
             @Override
             public void failure(RetrofitError error) {
+                listener.onFailed(error.toString());
                 Log.e("TAG", error.toString());
             }
         });
@@ -88,7 +90,7 @@ public class AndroidRetrofit extends AndroidOSConnect {
             @Override
             public void success(List<AndroidOSjson> androidOSjson, Response response) {
                 listener.onSuccess(androidOSjson);
-                Log.e("RetrofitResult", "success");
+                Log.e("RetrofitResult", "ShowAll Success");
             }
 
             @Override

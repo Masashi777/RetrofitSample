@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.lifeistech.android.retrofit_sample.androidOS.AndroidOS;
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     static ListView listView;
     static CustomAdapter adapter;
-    static ArrayList<AndroidOSjson> androidOSs =new ArrayList<AndroidOSjson>();
+    static ArrayList<AndroidOSjson> androidOSs = new ArrayList<AndroidOSjson>();
 
     //使用するコネクタを生成
     AndroidOSConnect connect = new AndroidRetrofit();
@@ -33,30 +32,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view_main);
 
-        listView = (ListView)findViewById(R.id.listView);
-
-        //OS情報の取得
-        androidOS.create(connect, new AndroidOSConnect.AndroidListener() {
-
-            @Override
-            public void onSuccess(List<AndroidOSjson> jsonList) {
-                //nameだけとりだす
-                ArrayList<AndroidOSjson> androidOSes = new ArrayList<>();
-
-                for (AndroidOSjson d : jsonList) {
-                    androidOSes.add(d);
-                }
-
-                renew(androidOSes);
-            }
-
-            @Override
-            public void onFailed(String error) {
-                Log.d("TAG", error);
-            }
-
-        });
-
+        listView = (ListView) findViewById(R.id.listView);
+        showAllOS();
         adapter = new CustomAdapter(getApplicationContext(), R.layout.list_view_main, androidOSs);
         listView.setAdapter(adapter);
 
@@ -64,30 +41,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String itemId = ((CustomAdapter)listView.getAdapter()).getItem(position).getId();
-
-                androidOS.delete(connect, itemId);
-
-                androidOS.showall(connect, new AndroidOSConnect.AndroidListener() {
-
-                    @Override
-                    public void onSuccess(List<AndroidOSjson> jsonList) {
-                        //nameだけとりだす
-                        ArrayList<AndroidOSjson> androidOSes = new ArrayList<>();
-
-                        for (AndroidOSjson d : jsonList) {
-                            androidOSes.add(d);
-                        }
-
-                        renew(androidOSes);
-
-                    }
-
-                    @Override
-                    public void onFailed(String error) {
-                        Log.d("TAG", error);
-                    }
-                });
+                String itemId = ((CustomAdapter) listView.getAdapter()).getItem(position).getId();
+                deleteOS(itemId);
 
                 return false;
             }
@@ -106,6 +61,47 @@ public class MainActivity extends AppCompatActivity {
     public void add(View v) {
         Intent intent = new Intent(this, EditActivity.class);
         startActivity(intent);
+    }
+
+    public void showAllOS() {
+
+        androidOS.showall(connect, new AndroidOSConnect.AndroidListener() {
+
+            @Override
+            public void onSuccess(List<AndroidOSjson> jsonList) {
+                //nameだけとりだす
+                ArrayList<AndroidOSjson> androidOSes = new ArrayList<>();
+
+                for (AndroidOSjson d : jsonList) {
+                    androidOSes.add(d);
+                }
+
+                renew(androidOSes);
+
+            }
+
+            @Override
+            public void onFailed(String error) {
+                Log.d("TAG", error);
+            }
+        });
+
+
+    }
+
+    public void deleteOS(String itemId) {
+        androidOS.delete(connect, itemId, new AndroidOSConnect.AndroidDeleteListener() {
+            @Override
+            public void onSuccess() {
+                showAllOS();
+            }
+
+            @Override
+            public void onFailed(String error) {
+                Log.d("TAG", error);
+            }
+        });
+
     }
 
 }

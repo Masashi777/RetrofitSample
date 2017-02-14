@@ -15,8 +15,6 @@ import com.lifeistech.android.retrofit_sample.androidOS.model.AndroidOSjson;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lifeistech.android.retrofit_sample.R.id.listView;
-
 /**
  * Created by Masashi Hamaguchi on 2017/02/14.
  */

@@ -18,8 +18,8 @@ public class AndroidOS {
         connect.request(version, codename, reference, listener);
     }
 
-    public void delete(AndroidOSConnect connect, String id) {
-        connect.delete(id);
+    public void delete(AndroidOSConnect connect, String id,final AndroidOSConnect.AndroidDeleteListener listener) {
+        connect.delete(id,listener);
     }
 
     public void showall(AndroidOSConnect connect, final AndroidOSConnect.AndroidListener listener) {

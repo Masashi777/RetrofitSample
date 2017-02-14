@@ -25,9 +25,17 @@ public abstract class AndroidOSConnect implements Serializable {
 
     }
 
+    public interface AndroidDeleteListener {
+
+        public void onSuccess();
+
+        public void onFailed(String error);
+
+    }
+
     public abstract void request(final String version, final String codename, final String reference, final AndroidListener listener);
 
-    public abstract void delete(final String id);
+    public abstract void delete(final String id,final AndroidDeleteListener listener);
 
     public abstract void showall(final AndroidListener listener);
 
