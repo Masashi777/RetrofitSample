@@ -11,7 +11,6 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.http.GET;
-import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
@@ -26,10 +25,10 @@ public class AndroidRetrofit extends AndroidOSConnect {
         public void request(@Query("version") String version, @Query("codename") String codename, @Query("reference") String reference, Callback<List<AndroidOSjson>> cb);
 
         @GET(REQUEST_DELETE)
-        public void delete(@Path("id") String id, String text);
+        public void delete(@Path("id") String id,Callback<Response> callback);
 
         @GET(REQUEST_SHOWALL)
-        public void showall(Callback<List<AndroidOSjson>> cd,String text);
+        public void showall(Callback<List<AndroidOSjson>> cd);
     }
 
     public void request(final String version, final String codename, final String reference, final AndroidListener listener) {
@@ -44,7 +43,7 @@ public class AndroidRetrofit extends AndroidOSConnect {
             @Override
             public void success(List<AndroidOSjson> androidOSjson, Response response) {
                 listener.onSuccess(androidOSjson);
-                Log.e("RetrofitResult", "success");
+                Log.e("RetrofitResult", "Create Success");
             }
 
             @Override
@@ -63,7 +62,18 @@ public class AndroidRetrofit extends AndroidOSConnect {
 
         AndroidApiService service = restAdapter.create(AndroidApiService.class);
 
-        service.delete(id,"");
+        service.delete(id, new Callback<Response>() {
+
+            @Override
+            public void success(Response response, Response response2) {
+                Log.e("RetrofitResult", "Delete Success");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("TAG", error.toString());
+            }
+        });
     }
 
     public void showall(final AndroidListener listener) {
