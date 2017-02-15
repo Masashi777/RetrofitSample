@@ -63,7 +63,7 @@ public class EditActivity extends AppCompatActivity {
 
         });
 
-
+        finish();
 
     }
 
